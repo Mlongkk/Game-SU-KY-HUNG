@@ -2,5 +2,7 @@
   "name": "Remix: Sử Ký Hùng",
   "description": "Trò chơi giải đố lịch sử dạng Escape Room, khám phá di tích và giải mã các bí ẩn lịch sử Việt Nam.",
   "requestFramePermissions": [],
-  "majorCapabilities": []
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }
