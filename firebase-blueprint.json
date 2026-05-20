@@ -1,0 +1,51 @@
+{
+  "entities": {
+    "UserProgress": {
+      "title": "User Progress",
+      "description": "Stores the game state for each user.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The unique identifier of the user (Firebase Auth UID)."
+        },
+        "currentLevelId": {
+          "type": "string",
+          "description": "The ID of the current level the user is on."
+        },
+        "inventory": {
+          "type": "array",
+          "description": "List of items the user has collected."
+        },
+        "solvedPuzzles": {
+          "type": "array",
+          "description": "List of puzzle IDs the user has solved."
+        },
+        "completedLevels": {
+          "type": "array",
+          "description": "List of level IDs the user has completed."
+        },
+        "isGameWon": {
+          "type": "boolean",
+          "description": "Whether the user has won the game."
+        },
+        "message": {
+          "type": "string",
+          "description": "The last message shown to the user."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The last time the progress was saved."
+        }
+      },
+      "required": ["userId", "currentLevelId", "inventory", "solvedPuzzles", "completedLevels", "isGameWon", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "userProgress/{userId}": {
+      "schema": "UserProgress",
+      "description": "Stores progress for each user, keyed by their UID."
+    }
+  }
+}

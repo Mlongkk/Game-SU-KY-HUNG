@@ -1,0 +1,54 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Reusable helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    // User Progress Rules
+    match /userProgress/{userId} {
+      allow get: if isOwner(userId);
+      
+      allow create: if isOwner(userId)
+        && isValidUserProgress(incoming())
+        && incoming().userId == userId
+        && incoming().updatedAt == request.time;
+
+      allow update: if isOwner(userId)
+        && isValidUserProgress(incoming())
+        && incoming().userId == userId
+        && incoming().updatedAt == request.time;
+      
+      allow delete: if isOwner(userId);
+
+      function isValidUserProgress(data) {
+        return data.keys().hasAll(['userId', 'currentLevelId', 'inventory', 'solvedPuzzles', 'completedLevels', 'isGameWon', 'updatedAt'])
+          && data.userId is string
+          && data.currentLevelId is string
+          && data.inventory is list
+          && data.solvedPuzzles is list
+          && data.completedLevels is list
+          && data.isGameWon is bool
+          && data.updatedAt == request.time;
+      }
+    }
+  }
+}
